@@ -19,21 +19,22 @@ import './MyTable.css';
 const MyTable = () => {
   const [tableData, setTableData] = useState([]);
 
+  // const [initialValues, setInitialValues] = useState<{ manualInputs: ManualInputs }>({ manualInputs: {} });
+  const [initialValues, setInitialValues] = useState({ manualInputs: { "CompanyOverview" : 4, "EBITDAvsDSCForAF": 1 } });
+
   useEffect(() => {
     setTableData(jsonData);
+
   }, []);
 
-  const initialValues = {
-    manualInputs: {},
-  };
 
   const calculateTotalWeight = (subFactors) => {
-    return subFactors.reduce((sum, subFactor) => sum + subFactor.subFactorWeight, 0) ;
+    return subFactors.reduce((sum, subFactor) => sum + subFactor.subFactorWeight, 0);
   };
-  
+
   const calculateWeightedSum = (subFactors, factorWeight) => {
     const totalWeight = calculateTotalWeight(subFactors);
-    return (factorWeight * totalWeight) / 100 ;
+    return (factorWeight * totalWeight) / 100;
   };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
@@ -67,101 +68,101 @@ const MyTable = () => {
               const factorWeight = item.factorWeight;
               // const sumOfWeights = subFactors.reduce((sum, subFactor) => sum + subFactor.weight, 0);
 
-               // Calculate total weight and weighted sum
-            let totalWeight = 0;
-            let weightedSum = 0;
+              // Calculate total weight and weighted sum
+              let totalWeight = 0;
+              let weightedSum = 0;
 
-            subFactors.forEach((subFactor) => {
-              const selectedValue = values.manualInputs[subFactor.signalName] ?? null;
-              const weight = subFactor.subFactorWeight * selectedValue / 100;
+              subFactors.forEach((subFactor) => {
+                const selectedValue = values.manualInputs[subFactor.signalName] ?? null;
+                const weight = subFactor.subFactorWeight * selectedValue / 100;
 
-              totalWeight += weight;
-              weightedSum += weight * factorWeight;
-            });
+                totalWeight += weight;
+                weightedSum += weight * factorWeight;
+              });
 
 
               return (
-              <div key={index}>
-                <Typography variant="h6" gutterBottom>
-                  {item.factor}
-                </Typography>
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Sub Factor</TableCell>
-                        <TableCell>Signal Name</TableCell>
-                        <TableCell>Options</TableCell>
-                        <TableCell>Risk Grade</TableCell>
-                        <TableCell>Weightage</TableCell>
-                        <TableCell>Weight</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {item.signalCriteriaMappingAtSubFactor.map((subItem, subIndex) => {
-                        const selectedValue = values.manualInputs[subItem.signalName] ?? null;
-                        const hasError = errors.manualInputs?.[subItem.signalName] && isSubmitting;
+                <div key={index}>
+                  <Typography variant="h6" gutterBottom>
+                    {item.factor}
+                  </Typography>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Sub Factor</TableCell>
+                          <TableCell>Signal Name</TableCell>
+                          <TableCell>Options</TableCell>
+                          <TableCell>Risk Grade</TableCell>
+                          <TableCell>Weightage</TableCell>
+                          <TableCell>Weight</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {item.signalCriteriaMappingAtSubFactor.map((subItem, subIndex) => {
+                          const selectedValue = values.manualInputs[subItem.signalName] ?? null;
+                          const hasError = errors.manualInputs?.[subItem.signalName] && isSubmitting;
 
-                        return (
-                          <TableRow key={`${index}-${subIndex}`}>
-                            <TableCell>{subItem.subFactor}</TableCell>
-                            <TableCell>{subItem.signalName}</TableCell>
-                            <TableCell>
-                              <Field
-                                name={`manualInputs.${subItem.signalName}`}
-                                as={Select}
-                                value={selectedValue}
-                                onChange={(event) => {
-                                  const selectedOption = event.target.value;
-                                  setFieldValue(`manualInputs.${subItem.signalName}`, selectedOption);
-                                }}
-                                className={hasError ? 'error' : ''}
-                              >
-                                <MenuItem value={null}>Select an option</MenuItem>
-                                {subItem.optionMapping.map((option, optionIndex) => (
-                                  <MenuItem
-                                    key={`${index}-${subIndex}-${optionIndex}`}
-                                    value={option.optionMapping.max}
-                                  >
-                                    {option.name}
-                                  </MenuItem>
-                                ))}
-                              </Field>
-                              {hasError && (
-                                <div className="error-message">Please select an option</div>
-                              )}
-                            </TableCell>
-                            <TableCell>{selectedValue}</TableCell>
-                            <TableCell>{subItem.subFactorWeight}</TableCell>
-                            <TableCell>{subItem.subFactorWeight * selectedValue /100}</TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                    <TableBody>
-                  <TableRow>
-                    <TableCell align="right" colSpan={4}>
-                      Total Weight:
-                    </TableCell>
-                    <TableCell>{totalWeight.toFixed(2)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="right" colSpan={4}>
-                      Factor Weight:
-                    </TableCell>
-                    <TableCell>{factorWeight}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="right" colSpan={4}>
-                      Weighted Sum:
-                    </TableCell>
-                    <TableCell>{(weightedSum/100).toFixed(2)}</TableCell>
-                  </TableRow>
-                </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>);
-})}
+                          return (
+                            <TableRow key={`${index}-${subIndex}`}>
+                              <TableCell>{subItem.subFactor}</TableCell>
+                              <TableCell>{subItem.signalName}</TableCell>
+                              <TableCell>
+                                <Field
+                                  name={`manualInputs.${subItem.signalName}`}
+                                  as={Select}
+                                  value={selectedValue}
+                                  onChange={(event) => {
+                                    const selectedOption = event.target.value;
+                                    setFieldValue(`manualInputs.${subItem.signalName}`, selectedOption);
+                                  }}
+                                  className={hasError ? 'error' : ''}
+                                >
+                                  <MenuItem value={null}>Select an option</MenuItem>
+                                  {subItem.optionMapping.map((option, optionIndex) => (
+                                    <MenuItem
+                                      key={`${index}-${subIndex}-${optionIndex}`}
+                                      value={option.optionMapping.max}
+                                    >
+                                      {option.name}
+                                    </MenuItem>
+                                  ))}
+                                </Field>
+                                {hasError && (
+                                  <div className="error-message">Please select an option</div>
+                                )}
+                              </TableCell>
+                              <TableCell>{selectedValue}</TableCell>
+                              <TableCell>{subItem.subFactorWeight}</TableCell>
+                              <TableCell>{subItem.subFactorWeight * selectedValue / 100}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell align="right" colSpan={4}>
+                            Total Weight:
+                          </TableCell>
+                          <TableCell>{totalWeight.toFixed(2)}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell align="right" colSpan={4}>
+                            Factor Weight:
+                          </TableCell>
+                          <TableCell>{factorWeight}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell align="right" colSpan={4}>
+                            Weighted Sum:
+                          </TableCell>
+                          <TableCell>{(weightedSum / 100).toFixed(2)}</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>);
+            })}
             <button type="submit" disabled={isSubmitting}>
               Submit
             </button>
