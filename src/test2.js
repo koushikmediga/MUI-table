@@ -32,6 +32,7 @@ function adjustRowHeight() {
   });
 }
 
+
 function App() {
   React.useEffect(() => {
     adjustRowHeight();
