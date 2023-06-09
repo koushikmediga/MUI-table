@@ -6,7 +6,9 @@ import RiskRating from './RiskRating';
 function App() {
   return (
     <div className="App">
-      <RiskRating />
+      {/* <RiskRating /> */}
+      {/* <Keyind /> */}
+      <MyTable />
     </div>
   );
 }
