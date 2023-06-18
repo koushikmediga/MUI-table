@@ -5,7 +5,7 @@ dotenv.config();
 
 const secretsManager = new AWS.SecretsManager();
 
-export async function loadSecrets() {
+export async function loadSecrets(): Promise<void> {
   try {
     const secretName = process.env.REACT_APP_SECRET_NAME;
     const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
